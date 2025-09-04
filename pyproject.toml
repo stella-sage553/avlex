@@ -1,0 +1,47 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "avlex"
+description = "Composable framework that bridges audio-visual encoders to LLMs for video captioning and understanding"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Jenna Wang" }]
+keywords = [
+    "audio-visual",
+    "multimodal",
+    "video-captioning",
+    "video-understanding",
+    "llm",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Multimedia :: Sound/Audio :: Analysis",
+]
+dynamic = ["version"]
+dependencies = [
+    "numpy>=1.23",
+    "pyyaml>=6.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/stella-sage553/avlex"
+Repository = "https://github.com/stella-sage553/avlex"
+Issues = "https://github.com/stella-sage553/avlex/issues"
+
+[tool.hatch.version]
+path = "avlex/_version.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["avlex"]
