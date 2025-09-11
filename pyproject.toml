@@ -35,6 +35,15 @@ dependencies = [
     "pyyaml>=6.0",
 ]
 
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4",
+    "pytest-cov>=4.1",
+    "ruff>=0.6",
+    "mypy>=1.8",
+    "types-PyYAML>=6.0",
+]
+
 [project.urls]
 Homepage = "https://github.com/stella-sage553/avlex"
 Repository = "https://github.com/stella-sage553/avlex"
@@ -45,3 +54,16 @@ path = "avlex/_version.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["avlex"]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+addopts = "-ra -q"
+
+[tool.mypy]
+python_version = "3.9"
+packages = ["avlex"]
+warn_unused_ignores = true
+warn_redundant_casts = true
+no_implicit_optional = true
+ignore_missing_imports = true
