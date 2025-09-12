@@ -1,0 +1,14 @@
+[run]
+branch = true
+source = avlex
+omit =
+    avlex/_version.py
+    avlex/llm/openai_client.py
+
+[report]
+exclude_lines =
+    pragma: no cover
+    raise NotImplementedError
+    if TYPE_CHECKING:
+    \.\.\.
+show_missing = true
