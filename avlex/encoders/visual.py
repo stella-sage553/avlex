@@ -57,3 +57,34 @@ class MotionHistogramEncoder(Encoder):
             if total > 0:
                 feats[t] = hist / total
         return feats
+
+
+class ColorStatsEncoder(Encoder):
+    """Per-frame intensity histogram — a brightness/contrast descriptor.
+
+    Complements :class:`MotionHistogramEncoder`: motion says *how much* changes,
+    intensity says *how bright* the scene is and how spread its tones are.
+    """
+
+    modality = Modality.VISUAL
+
+    def __init__(self, n_bins: int = 16) -> None:
+        if n_bins < 2:
+            raise ValueError("n_bins must be >= 2")
+        self.n_bins = n_bins
+
+    @property
+    def output_dim(self) -> int:
+        return self.n_bins
+
+    def encode(self, raw: Array) -> np.ndarray:
+        frames = _to_gray(raw)
+        n = frames.shape[0]
+        edges = np.linspace(0.0, 1.0, self.n_bins + 1)
+        feats = np.zeros((n, self.n_bins), dtype=np.float64)
+        for t in range(n):
+            hist, _ = np.histogram(frames[t].ravel(), bins=edges)
+            total = hist.sum()
+            if total > 0:
+                feats[t] = hist / total
+        return feats
