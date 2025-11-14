@@ -77,3 +77,28 @@ class MelStatEncoder(Encoder):
         spectrum = np.abs(np.fft.rfft(frames * self._window, n=self.n_fft, axis=1)) ** 2
         mel = spectrum @ self._filterbank.T
         return np.log1p(mel)
+
+
+class EnergyEnvelopeEncoder(Encoder):
+    """Per-frame loudness and zero-crossing rate.
+
+    A cheap two-dimensional descriptor: root-mean-square energy tracks loudness,
+    and the zero-crossing rate is a rough proxy for noisiness/voicing.
+    """
+
+    modality = Modality.AUDIO
+
+    def __init__(self, frame_length: int = 400, hop_length: int = 160) -> None:
+        self.frame_length = frame_length
+        self.hop_length = hop_length
+
+    @property
+    def output_dim(self) -> int:
+        return 2
+
+    def encode(self, raw: Array) -> np.ndarray:
+        frames = _frame_signal(raw, self.frame_length, self.hop_length)
+        rms = np.sqrt(np.mean(frames**2, axis=1))
+        crossings = np.abs(np.diff(np.sign(frames), axis=1)) > 0
+        zcr = crossings.mean(axis=1)
+        return np.stack([rms, zcr], axis=1)
