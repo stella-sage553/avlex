@@ -17,7 +17,7 @@ from dataclasses import dataclass
 import numpy as np
 
 from avlex.bridges.base import Bridge, BridgeInput, BridgeOutput
-from avlex.types import Array, Modality
+from avlex.types import Modality
 from avlex.utils.arrays import as_float
 
 _INF = float("inf")

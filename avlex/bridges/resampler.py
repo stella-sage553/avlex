@@ -10,8 +10,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-import numpy as np
-
 from avlex.bridges.attention import feed_forward, layer_norm, multi_head_attention
 from avlex.bridges.base import Bridge, BridgeInput, BridgeOutput
 from avlex.utils.arrays import as_float
@@ -46,7 +44,9 @@ class PerceiverResampler(Bridge):
         for layer in range(self.depth):
             attended = multi_head_attention(x, seq, seq, n_heads=heads)
             x = layer_norm(x + attended)
-            x = layer_norm(x + feed_forward(x, derive_seed(self.seed, "perceiver", str(layer))))
+            x = layer_norm(
+                x + feed_forward(x, derive_seed(self.seed, "perceiver", str(layer)))
+            )
         weight = seeded_matrix(
             derive_seed(self.seed, "perceiver", "out", str(dim), str(self.out_dim)),
             (dim, self.out_dim),
