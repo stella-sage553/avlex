@@ -14,10 +14,15 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from avlex.bridges.base import Bridge
+from avlex.bridges.registry import get_bridge
 from avlex.clip import ClipFeatures
+from avlex.config import PipelineConfig
 from avlex.encoders.base import Encoder
+from avlex.encoders.registry import get_encoder
+from avlex.fusion import get_fusion
 from avlex.fusion.base import Fusion
 from avlex.llm.base import LLMClient, Message
+from avlex.llm.registry import get_llm
 from avlex.prompts.library import get_template
 from avlex.prompts.render import render_words
 from avlex.result import PipelineResult
@@ -35,11 +40,32 @@ class Pipeline:
     bridge: Bridge
     llm: LLMClient
 
+    @classmethod
+    def from_config(cls, config: PipelineConfig) -> Pipeline:
+        """Assemble a pipeline from a :class:`PipelineConfig` via the registries."""
+        visual = (
+            get_encoder(config.visual_encoder.name, **config.visual_encoder.options)
+            if config.visual_encoder
+            else None
+        )
+        audio = (
+            get_encoder(config.audio_encoder.name, **config.audio_encoder.options)
+            if config.audio_encoder
+            else None
+        )
+        return cls(
+            visual_encoder=visual,
+            audio_encoder=audio,
+            fusion=get_fusion(config.fusion.name, **config.fusion.options),
+            bridge=get_bridge(config.bridge.name, **config.bridge.options),
+            llm=get_llm(config.llm.name, **config.llm.options),
+        )
+
     def _encode(self, clip: ClipFeatures) -> dict[Modality, Array]:
         feats: dict[Modality, Array] = {}
-        if self.visual_encoder is not None and clip.has_visual:
+        if self.visual_encoder is not None and clip.visual is not None:
             feats[Modality.VISUAL] = self.visual_encoder.encode(clip.visual)
-        if self.audio_encoder is not None and clip.has_audio:
+        if self.audio_encoder is not None and clip.audio is not None:
             feats[Modality.AUDIO] = self.audio_encoder.encode(clip.audio)
         if not feats:
             raise ValueError("no encodable modalities for this clip")
@@ -101,4 +127,3 @@ class Pipeline:
     def summarize(self, clip: ClipFeatures) -> PipelineResult:
         """Summarize ``clip`` in a couple of sentences."""
         return self.run(clip, Task.SUMMARIZE)
-
