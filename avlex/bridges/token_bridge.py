@@ -24,14 +24,14 @@ _INF = float("inf")
 
 #: (upper-threshold, phrase) buckets, scanned low to high.
 MOTION_WORDS = [
-    (0.08, "barely any movement"),
-    (0.20, "a little movement"),
-    (0.40, "steady movement"),
+    (0.025, "barely any movement"),
+    (0.06, "a little movement"),
+    (0.18, "steady movement"),
     (_INF, "lots of movement"),
 ]
 LOUDNESS_WORDS = [
-    (0.6, "quiet"),
-    (1.6, "moderate sound"),
+    (0.8, "quiet"),
+    (2.2, "moderate sound"),
     (_INF, "loud sound"),
 ]
 BRIGHTNESS_WORDS = [
@@ -64,11 +64,17 @@ def _minmax(x: np.ndarray) -> np.ndarray:
     return (x - lo) / (hi - lo)
 
 
+def _slope(activity: np.ndarray) -> float:
+    if activity.shape[0] < 2:
+        return 0.0
+    x = np.linspace(0.0, 1.0, activity.shape[0])
+    return float(np.polyfit(x, _minmax(activity), 1)[0])
+
+
 def _trend(activity: np.ndarray) -> str:
     if activity.shape[0] < 2:
         return "the clip is too short to tell a story"
-    x = np.linspace(0.0, 1.0, activity.shape[0])
-    slope = float(np.polyfit(x, _minmax(activity), 1)[0])
+    slope = _slope(activity)
     if slope > 0.15:
         return "the action builds toward the end"
     if slope < -0.15:
@@ -107,9 +113,8 @@ class TokenBridge(Bridge):
                 meta["audio_brightness"] = brightness
 
         if self.include_timeline and activity:
-            ref = activity.get(Modality.VISUAL)
-            if ref is None:
-                ref = next(iter(activity.values()))
-            words.append(f"timeline: {_trend(ref)}")
+            # describe whichever stream changes most decisively over time
+            ref_mod = max(activity, key=lambda m: abs(_slope(activity[m])))
+            words.append(f"timeline: {_trend(activity[ref_mod])}")
 
         return BridgeOutput(words=words, meta=meta)
