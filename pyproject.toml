@@ -35,6 +35,9 @@ dependencies = [
     "pyyaml>=6.0",
 ]
 
+[project.scripts]
+avlex = "avlex.cli:main"
+
 [project.optional-dependencies]
 dev = [
     "pytest>=7.4",
@@ -42,6 +45,9 @@ dev = [
     "ruff>=0.6",
     "mypy>=1.8",
     "types-PyYAML>=6.0",
+]
+openai = [
+    "openai>=1.0",
 ]
 
 [project.urls]
