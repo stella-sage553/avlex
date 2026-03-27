@@ -7,7 +7,7 @@ from avlex.encoders.registry import (
     get_encoder,
     register_encoder,
 )
-from avlex.encoders.visual import ColorStatsEncoder, MotionHistogramEncoder
+from avlex.encoders.vision import ColorStatsEncoder, MotionHistogramEncoder
 
 __all__ = [
     "Encoder",

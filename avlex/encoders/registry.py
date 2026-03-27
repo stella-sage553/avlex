@@ -6,7 +6,7 @@ from typing import Callable
 
 from avlex.encoders.audio import EnergyEnvelopeEncoder, MelStatEncoder
 from avlex.encoders.base import Encoder
-from avlex.encoders.visual import ColorStatsEncoder, MotionHistogramEncoder
+from avlex.encoders.vision import ColorStatsEncoder, MotionHistogramEncoder
 
 EncoderFactory = Callable[..., Encoder]
 
