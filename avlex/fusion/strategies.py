@@ -25,7 +25,10 @@ _ORDER = (Modality.VISUAL, Modality.AUDIO)
 
 
 def _ordered(features: dict[Modality, Array]) -> list[tuple[Modality, Array]]:
-    return [(m, features[m]) for m in _ORDER if m in features]
+    items = [(m, features[m]) for m in _ORDER if m in features]
+    if not items:
+        raise ValueError("fusion received no known modalities (audio/visual)")
+    return items
 
 
 @dataclass
