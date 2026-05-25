@@ -16,7 +16,9 @@ class WarmthBridge(TokenBridge):
         audio = features.modalities.get(Modality.AUDIO)
         if audio is not None and audio.size:
             centroid = float(np.mean(np.argmax(audio, axis=1))) / audio.shape[1]
-            words.append("mood: warm and bright" if centroid > 0.5 else "mood: cool and low")
+            words.append(
+                "mood: warm and bright" if centroid > 0.5 else "mood: cool and low"
+            )
         return BridgeOutput(words=words, meta=out.meta)
 
 
