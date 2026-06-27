@@ -40,7 +40,7 @@ def _summary(percept: dict[str, str]) -> str:
 
 def _answer(question: str, percept: dict[str, str]) -> str:
     ql = question.lower()
-    visual_cues = ("move", "movement", "motion", "happening", "action", "see", "visual")
+    visual_cues = ("mov", "motion", "happen", "action", "scene", "visual", "look")
     audio_cues = ("sound", "hear", "audio", "loud", "music", "speech", "noise", "voice")
     if any(cue in ql for cue in visual_cues) and "visual" in percept:
         return f"Visually, there is {percept['visual']}."
