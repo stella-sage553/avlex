@@ -35,7 +35,10 @@ def _mel_filterbank(n_mels: int, n_fft: int, sample_rate: int) -> np.ndarray:
     """Triangular mel filterbank of shape ``(n_mels, n_fft // 2 + 1)``."""
     n_bins = n_fft // 2 + 1
     fft_freqs = np.linspace(0.0, sample_rate / 2.0, n_bins)
-    mel_min, mel_max = _hz_to_mel(np.array([0.0])), _hz_to_mel(np.array([sample_rate / 2.0]))
+    mel_min, mel_max = (
+        _hz_to_mel(np.array([0.0])),
+        _hz_to_mel(np.array([sample_rate / 2.0])),
+    )
     mel_points = np.linspace(mel_min[0], mel_max[0], n_mels + 2)
     hz_points = _mel_to_hz(mel_points)
     fb = np.zeros((n_mels, n_bins), dtype=np.float64)
