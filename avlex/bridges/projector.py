@@ -58,6 +58,8 @@ class LinearProjector(Bridge):
 
     def bridge(self, features: BridgeInput) -> BridgeOutput:
         seq = as_float(features.sequence)
+        if seq.ndim != 2 or seq.shape[0] == 0:
+            raise ValueError("LinearProjector needs a non-empty (T, D) sequence")
         compressed = self._compress(seq)
         in_dim = compressed.shape[1]
         weight = seeded_matrix(
