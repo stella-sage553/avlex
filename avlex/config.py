@@ -80,8 +80,12 @@ class PipelineConfig:
     def to_dict(self) -> dict:
         """Serialize to a plain dict suitable for YAML/JSON."""
         return {
-            "visual_encoder": self.visual_encoder.to_dict() if self.visual_encoder else None,
-            "audio_encoder": self.audio_encoder.to_dict() if self.audio_encoder else None,
+            "visual_encoder": self.visual_encoder.to_dict()
+            if self.visual_encoder
+            else None,
+            "audio_encoder": self.audio_encoder.to_dict()
+            if self.audio_encoder
+            else None,
             "fusion": self.fusion.to_dict(),
             "bridge": self.bridge.to_dict(),
             "llm": self.llm.to_dict(),
@@ -100,5 +104,3 @@ class PipelineConfig:
         Path(path).write_text(
             yaml.safe_dump(self.to_dict(), sort_keys=False), encoding="utf-8"
         )
-
-
