@@ -34,3 +34,28 @@ def softmax(x: Array, axis: int = -1) -> np.ndarray:
 def mean_pool(x: Array, axis: int = 0) -> np.ndarray:
     """Mean over ``axis`` (time, by convention) keeping the feature dimension."""
     return as_float(x).mean(axis=axis)
+
+
+def _pad_to_multiple(seq: np.ndarray, factor: int) -> np.ndarray:
+    pad = (-seq.shape[0]) % factor
+    if pad:
+        seq = np.concatenate([seq, np.repeat(seq[-1:], pad, axis=0)], axis=0)
+    return seq
+
+
+def avgpool_time(seq: Array, factor: int) -> np.ndarray:
+    """Average non-overlapping windows of ``factor`` steps along time."""
+    arr = as_float(seq)
+    if factor <= 1:
+        return arr
+    arr = _pad_to_multiple(arr, factor)
+    return arr.reshape(-1, factor, arr.shape[1]).mean(axis=1)
+
+
+def stack_frames(seq: Array, factor: int) -> np.ndarray:
+    """Concatenate ``factor`` consecutive steps into one wider vector."""
+    arr = as_float(seq)
+    if factor <= 1:
+        return arr
+    arr = _pad_to_multiple(arr, factor)
+    return arr.reshape(-1, factor * arr.shape[1])

@@ -9,33 +9,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-import numpy as np
-
 from avlex.bridges.base import Bridge, BridgeInput, BridgeOutput
-from avlex.utils.arrays import as_float
+from avlex.utils.arrays import as_float, avgpool_time, stack_frames
 from avlex.utils.seeding import derive_seed, seeded_matrix
-
-
-def _avgpool_time(seq: np.ndarray, factor: int) -> np.ndarray:
-    """Average non-overlapping windows of ``factor`` steps along time."""
-    if factor <= 1:
-        return seq
-    n = seq.shape[0]
-    pad = (-n) % factor
-    if pad:
-        seq = np.concatenate([seq, np.repeat(seq[-1:], pad, axis=0)], axis=0)
-    return seq.reshape(-1, factor, seq.shape[1]).mean(axis=1)
-
-
-def _stack_frames(seq: np.ndarray, factor: int) -> np.ndarray:
-    """Concatenate ``factor`` consecutive steps into one wider vector."""
-    if factor <= 1:
-        return seq
-    n = seq.shape[0]
-    pad = (-n) % factor
-    if pad:
-        seq = np.concatenate([seq, np.repeat(seq[-1:], pad, axis=0)], axis=0)
-    return seq.reshape(-1, factor * seq.shape[1])
 
 
 @dataclass
@@ -47,11 +23,11 @@ class LinearProjector(Bridge):
     factor: int = 2
     seed: int = 0
 
-    def _compress(self, seq: np.ndarray) -> np.ndarray:
+    def _compress(self, seq):
         if self.compression == "avgpool":
-            return _avgpool_time(seq, self.factor)
+            return avgpool_time(seq, self.factor)
         if self.compression == "stack":
-            return _stack_frames(seq, self.factor)
+            return stack_frames(seq, self.factor)
         if self.compression == "none":
             return seq
         raise ValueError(f"unknown compression: {self.compression!r}")
