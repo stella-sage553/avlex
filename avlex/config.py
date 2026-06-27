@@ -88,3 +88,17 @@ class PipelineConfig:
             "task": self.task.value,
         }
 
+    @classmethod
+    def from_yaml(cls, path: str | Path) -> PipelineConfig:
+        """Load a config from a YAML file."""
+        text = Path(path).read_text(encoding="utf-8")
+        data = yaml.safe_load(text) or {}
+        return cls.from_dict(data)
+
+    def to_yaml(self, path: str | Path) -> None:
+        """Write this config to a YAML file."""
+        Path(path).write_text(
+            yaml.safe_dump(self.to_dict(), sort_keys=False), encoding="utf-8"
+        )
+
+
