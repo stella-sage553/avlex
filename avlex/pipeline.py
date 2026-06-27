@@ -93,3 +93,12 @@ class Pipeline:
     def caption(self, clip: ClipFeatures) -> PipelineResult:
         """Caption ``clip`` in one sentence."""
         return self.run(clip, Task.CAPTION)
+
+    def answer(self, clip: ClipFeatures, question: str) -> PipelineResult:
+        """Answer ``question`` about ``clip`` (video question answering)."""
+        return self.run(clip, Task.VIDEO_QA, question=question)
+
+    def summarize(self, clip: ClipFeatures) -> PipelineResult:
+        """Summarize ``clip`` in a couple of sentences."""
+        return self.run(clip, Task.SUMMARIZE)
+
