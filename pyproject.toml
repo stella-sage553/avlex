@@ -61,7 +61,7 @@ testpaths = ["tests"]
 addopts = "-ra -q"
 
 [tool.mypy]
-python_version = "3.9"
+python_version = "3.12"
 packages = ["avlex"]
 warn_unused_ignores = true
 warn_redundant_casts = true
