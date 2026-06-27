@@ -9,7 +9,6 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import Optional
 
 
 @dataclass
@@ -44,7 +43,7 @@ class LLMClient(ABC):
     def generate(
         self,
         messages: list[Message],
-        config: Optional[GenerationConfig] = None,
+        config: GenerationConfig | None = None,
     ) -> LLMResponse:
         """Generate a reply to ``messages``."""
 

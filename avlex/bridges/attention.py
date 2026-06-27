@@ -7,8 +7,6 @@ to be correct, not learned.
 
 from __future__ import annotations
 
-from typing import Optional
-
 import numpy as np
 
 from avlex.types import Array
@@ -19,7 +17,7 @@ def scaled_dot_product_attention(
     query: Array,
     key: Array,
     value: Array,
-    mask: Optional[Array] = None,
+    mask: Array | None = None,
 ) -> np.ndarray:
     """Attention over ``(Tq, d) x (Tk, d) x (Tk, dv) -> (Tq, dv)``.
 
@@ -47,7 +45,7 @@ def multi_head_attention(
     key: Array,
     value: Array,
     n_heads: int = 1,
-    mask: Optional[Array] = None,
+    mask: Array | None = None,
 ) -> np.ndarray:
     """Head-split attention: slice the feature dim into ``n_heads`` and concat.
 

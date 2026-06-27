@@ -15,7 +15,6 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import Optional
 
 from avlex.types import Array, Modality
 
@@ -37,8 +36,8 @@ class BridgeInput:
 class BridgeOutput:
     """What a bridge produces for the prompt assembler."""
 
-    tokens: Optional[Array] = None
-    words: Optional[list[str]] = None
+    tokens: Array | None = None
+    words: list[str] | None = None
     meta: dict = field(default_factory=dict)
 
     @property

@@ -9,7 +9,6 @@ keeps the core free of ffmpeg/opencv and makes results reproducible.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Optional
 
 import numpy as np
 
@@ -35,8 +34,8 @@ class ClipFeatures:
         Free-form metadata (clip id, source path, ...).
     """
 
-    visual: Optional[Array] = None
-    audio: Optional[Array] = None
+    visual: Array | None = None
+    audio: Array | None = None
     fps: float = 1.0
     sample_rate: int = 16000
     meta: dict = field(default_factory=dict)
